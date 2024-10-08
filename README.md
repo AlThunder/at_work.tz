@@ -1,66 +1,317 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Создать .env наподобие .env.example (можно скопировать и переименовать)
 
-## About Laravel
+Создать БД at_work
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Выполнить команду php artisan migrate
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Выполнить команду php artisan storage:link
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+1. Комментарии
+1) Получить все комментарии:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+GET|HEAD        api/comments                      comments.index › Api\CommentController@index
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Возвращает ответ, подобный:
+{
+"success": true,
+"0": [
+{
+"id": 4,
+"user_id": 6,
+"company_id": 2,
+"content": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"rating": "10"
+},
+{
+"id": 5,
+"user_id": 7,
+"company_id": 2,
+"content": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"rating": "5"
+}]}
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+2) Создать комментарий:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+POST            api/comments                      comments.store › Api\CommentController@store
 
-### Premium Partners
+Ожидает к получению:
+user_id: Внешний ключ к пользователю
+company_id: Внешний ключ к компании
+content: (Принимает текст длиной от 150 до 550 символов)
+rating: (Принимает числа от 1 до 10)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно сохранены"
+}
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3) Получить комментарий по id:
 
-## Code of Conduct
+GET|HEAD        api/comments/{comment}            comments.show › Api\CommentController@show
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Возвращает ответ, подобный:
+[{
+"success": true,
+"0": {
+"id": 5,
+"user_id": 7,
+"company_id": 2,
+"content": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"rating": "5"
+}
+}]
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4) Редактирует существующий комментарий:
+PUT|PATCH       api/comments/{comment}            comments.update › Api\CommentController@update
 
-## License
+Ожидает к получению:
+id: изменяемого комментария
+user_id: Внешний ключ к пользователю
+company_id: Внешний ключ к компании
+content: (Принимает текст длиной от 150 до 550 символов)
+rating: (Принимает числа от 1 до 10)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно обновлены"
+}
+
+
+5) Удаляет комментарий(soft):
+
+DELETE          api/comments/{comment}            comments.destroy › Api\CommentController@destroy
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно удалены"
+}
+
+
+2. Компании
+1) Получить все компании:
+
+GET|HEAD        api/companies                     companies.index › Api\CompanyController@index
+
+Возвращает ответ, подобный:
+"success": true,
+"0": [
+{
+"id": 2,
+"name": "Test1",
+"description": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"logo": "images/logos/jnriV1JTmCdP0tZUxXqRQfYDAk0HqWcRYRUFCupw.png"
+},
+{
+"id": 3,
+"name": "Test111",
+"description": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"logo": "images/logos/YTzrhfr8vtVwFnVLntXj7QLSO1bAhgk6rrSxQRHt.png"
+}]
+
+
+2) Создать компанию:
+
+POST            api/companies                     companies.store › Api\CompanyController@store
+
+Ожидает к получению:
+name: (Принимает названия длиной более 3 символов и менее 40 символов)
+description: (Принимает текст длиной от 150 до 400 символов)
+logo: (Принимает изображения в формате PNG, с максимальным размером файла 3 МБ)
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно сохранены"
+}
+
+
+3) Получить компанию по id:
+
+GET|HEAD        api/companies/{company}           companies.show › Api\CompanyController@show
+
+Возвращает ответ, подобный:
+[{
+"success": true,
+"0": {
+"id": 3,
+"name": "Test111",
+"description": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"logo": "images/logos/YTzrhfr8vtVwFnVLntXj7QLSO1bAhgk6rrSxQRHt.png"
+}
+}]
+
+
+4) Редактирует существующую компанию:
+
+PUT|PATCH       api/companies/{company}           companies.update › Api\CompanyController@update
+
+Ожидает к получению:
+id: изменяемой компании
+name: (Принимает названия длиной более 3 символов и менее 40 символов)
+description: (Принимает текст длиной от 150 до 400 символов)
+logo: (Принимает изображения в формате PNG, с максимальным размером файла 3 МБ)
+
+Возвращает ответ, подобный:
+[{
+"success": true,
+"0": "Данные успешно обновлены"
+}]
+
+
+5) Удаляет компанию (soft):
+
+DELETE          api/companies/{company}           companies.destroy › Api\CompanyController@destroy
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно удалены"
+}
+
+
+6) Получить комментарии компании по id:
+GET|HEAD        api/companies/comments/{company}  Api\CompanyController@getComments
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"0": [
+{
+"id": 5,
+"user_id": 7,
+"content": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития."
+},
+{
+"id": 6,
+"user_id": 1,
+"content": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития."
+}]}
+
+
+7) Получить общую оценку компании:
+
+GET|HEAD        api/companies/rate/{company}      Api\CompanyController@getRate
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"rating": 2.6666666666666665
+}
+
+
+8) Получить топ-{limit} компаний по оценке:
+GET|HEAD        api/companies/top/{limit}                 Api\CompanyController@getTopRated
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"rating": [
+{
+"id": 4,
+"name": "Test11",
+"description": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"logo": "images/logos/VJH5exg9fLSPIaQ4Z9lIDm7mLWSYOIXz2Nbn8OFU.png",
+"comments_avg_rating": 8.5
+},
+{
+"id": 3,
+"name": "Test111",
+"description": "Задача организации, в особенности же новая модель организационной деятельности в значительной степени обуславливает создание новых предложений. Задача организации, в особенности же начало повседневной работы по формированию позиции играет важную роль в формировании направлений прогрессивного развития.",
+"logo": "images/logos/YTzrhfr8vtVwFnVLntXj7QLSO1bAhgk6rrSxQRHt.png",
+"comments_avg_rating": 5
+}]}
+
+
+
+3. Пользователи
+1) Получить всех пользователей:
+GET|HEAD        api/users                         users.index › Api\UserController@index
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"0": [
+{
+"id": 1,
+"name": "Test",
+"surname": "Testov",
+"phone": "+79995551111",
+"avatar": "images/avatars/Ca4JcXdl0X9dIIKcogGHvvXk2ZcX5Hs6jGo3GAKR.png"
+},
+{
+"id": 2,
+"name": "Test",
+"surname": "Testov",
+"phone": "+79995551122",
+"avatar": "images/avatars/6zZAfQnR39ndnhU3lNFeOWoHo8C6VhblrBJZOoCU.jpg"
+}]}
+
+
+2) Создать пользователя:
+POST            api/users                         users.store › Api\UserController@store
+
+Ожидает к получению:
+name: (Принимает имена длиной более 3 символов и менее 40 символов)
+surname: (Принимает фамилии длиной более 3 символов и менее 40 символов)
+phone: (Принимает номера телефонов в формате +7XXXXXXXXXX)
+avatar: (Принимает изображения в форматах PNG и JPG, с максимальным размером файла 2 МБ)
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно сохранены"
+}
+
+
+3) Получить пользователя по id:
+
+GET|HEAD        api/users/{user}                  users.show › Api\UserController@show
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"0": {
+"id": 2,
+"name": "Test",
+"surname": "Testov",
+"phone": "+79995551122",
+"avatar": "images/avatars/6zZAfQnR39ndnhU3lNFeOWoHo8C6VhblrBJZOoCU.jpg"
+}
+}
+
+
+4) Редактировать пользователя:
+
+PUT|PATCH       api/users/{user}                  users.update › Api\UserController@update
+
+Ожидает к получению:
+id: редактируемого пользователя
+name: (Принимает имена длиной более 3 символов и менее 40 символов)
+surname: (Принимает фамилии длиной более 3 символов и менее 40 символов)
+phone: (Принимает номера телефонов в формате +7XXXXXXXXXX)
+avatar: (Принимает изображения в форматах PNG и JPG, с максимальным размером файла 2 МБ)
+
+Возвращает ответ, подобный:
+[{
+"success": true,
+"0": "Данные успешно обновлены"
+}]
+
+
+5) Удаляет пользователя (soft):
+
+DELETE          api/users/{user}                  users.destroy › Api\UserController@destroy
+
+Возвращает ответ, подобный:
+{
+"success": true,
+"message": "Данные успешно удалены"
+}

@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+$groupData = [
+    'namespace' => '\App\Http\Controllers\Api',
+    'middleware' => 'api',
+];
+Route::group($groupData, function () {
+    // Users
+    Route::apiResources([
+        'users'=> UserController::class,
+    ]);
 });
+
+Route::group($groupData, function () {
+    // Companies
+    Route::apiResources([
+        'companies'=> CompanyController::class,
+    ]);
+});
+
+Route::group($groupData, function () {
+    // Comments
+    Route::apiResources([
+        'comments'=> CommentController::class,
+    ]);
+});
+
+Route::get('companies/comments/{company}', [\App\Http\Controllers\Api\CompanyController::class, 'getComments']);
+Route::get('companies/rate/{company}', [\App\Http\Controllers\Api\CompanyController::class, 'getRate']);
+Route::get('companies/top/{limit}', [\App\Http\Controllers\Api\CompanyController::class, 'getTopRated']);
